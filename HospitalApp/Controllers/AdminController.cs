@@ -22,9 +22,9 @@ namespace HospitalApp.Controllers
             this.adminBusiness = adminBusiness;
         }
         [HttpPost("login")]
-        public ActionResult AdminLogin(string email,string password)
+        public ActionResult AdminLogin(LoginModel model)
         {
-            var result = adminBusiness.AdminLogin(email, password);
+            var result = adminBusiness.AdminLogin(model);
             if(result != null)
             {
                 return Ok(new ResponseModel<string> { Status = true, Message = "Login Successfull", Data = result });

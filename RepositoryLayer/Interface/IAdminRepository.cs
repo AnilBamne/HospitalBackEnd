@@ -7,7 +7,7 @@ namespace RepositoryLayer.Interface
 {
     public interface IAdminRepository
     {
-        public string AdminLogin(string email, string password);
+        public string AdminLogin(LoginModel model);
         public List<AppointmentModel> GetAllAppointments();
         public List<DocModel> GetAllDoctors();
         public List<PatientRegModel> GetAllPatients();

@@ -17,6 +17,7 @@ namespace CommonLayer.Model
         public string DoctorName { get; set; }
         public string Desies { get; set; }
         public TimeSpan EndTime { get; set; }
+        public bool isTrash { get; set; }
 
     }
 }

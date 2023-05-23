@@ -39,5 +39,9 @@ namespace BusinessLayer.Service
                 throw ex;
             }
         }
+        public string UpdateAppoinment(int appointmentId, DateTime date, DateTime time, DateTime endTime)
+        {
+            return appointmentRepository.UpdateAppoinment(appointmentId,date,time,endTime);
+        }
     }
 }

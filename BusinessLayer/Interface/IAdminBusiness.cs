@@ -7,7 +7,7 @@ namespace BusinessLayer.Interface
 {
     public interface IAdminBusiness
     {
-        public string AdminLogin(string email, string password);
+        public string AdminLogin(LoginModel model);
         public List<AppointmentModel> GetAllAppointments();
         public List<DocModel> GetAllDoctors();
         public List<PatientRegModel> GetAllPatients();

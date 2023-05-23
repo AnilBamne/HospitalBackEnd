@@ -187,39 +187,38 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public List<PatientRegModel> GetMyPatients(int doctorId)
+        public List<AppointmentModel> GetMyAppointments(int doctorId)
         {
             try
             {
                 using (this.connection)
                 {
-                    SqlCommand command = new SqlCommand("spGetMyPatients", this.connection);
+                    string query = @"select * from AppointmentsTable where DoctorId=@Id;";
+                    SqlCommand command = new SqlCommand(query, this.connection);
+                    command.Parameters.AddWithValue("@Id", doctorId);
                     this.connection.Open();
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@DoctorId", doctorId);
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
-                        List<PatientRegModel> list = new List<PatientRegModel>();
+                        List<AppointmentModel> list = new List<AppointmentModel>();
                         while (reader.Read())
                         {
-                            PatientRegModel model = new PatientRegModel();
-
-                            model.PatientFirstName = reader.GetString(1);
-                            model.PatientLastName = reader.GetString(2);
+                            AppointmentModel model = new AppointmentModel();
+                            model.AppointmentId = reader.GetInt32(0);
+                            model.PatientId = reader.GetInt32(1);
+                            model.PatientName = reader.GetString(2);
                             model.PatientEmail = reader.GetString(3);
-                            model.PatientPassword = reader.GetString(4);
-                            model.PatientGender = reader.GetString(5);
-                            model.PatientAddress = reader.GetString(6);
-                            model.PatientCity = reader.GetString(7);
-                            model.PatientState = reader.GetString(8);
-                            model.PatientDesies = reader.GetString(9);
-                           
+                            model.Date = reader.GetDateTime(4);
+                            model.Time = reader.GetTimeSpan(5);
+                            model.Number = reader.GetInt32(6);
+                            model.DoctorId = reader.GetInt32(7);
+                            model.DoctorName = reader.GetString(8);
+                            model.Desies = reader.GetString(9);
+                            model.EndTime = reader.GetTimeSpan(10);
                             list.Add(model);
                         }
                         return list;
                     }
-
                     return null;
                 }
             }

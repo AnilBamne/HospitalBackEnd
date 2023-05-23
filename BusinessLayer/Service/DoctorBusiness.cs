@@ -53,11 +53,11 @@ namespace BusinessLayer.Service
                 throw e;
             }
         }
-        public List<PatientRegModel> GetMyPatients(int doctorId)
+        public List<AppointmentModel> GetMyAppointments(int doctorId)
         {
             try
             {
-                return doctorRepository.GetMyPatients(doctorId);
+                return doctorRepository.GetMyAppointments(doctorId);
 
             }
             catch (Exception e)

@@ -1,9 +1,11 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HospitalApp.Controllers
 {
@@ -100,40 +102,23 @@ namespace HospitalApp.Controllers
         }
 
 
-        //[HttpGet("GetAllDocs")]
-        //public ActionResult GetAllDoctors()
-        //{
-        //    try
-        //    {
-        //        var result = this.doctorBusiness.GetAllDoctors();
-        //        if (result != null)
-        //        {
-        //            return Ok(new ResponseModel<List<DocRegModel>> { Status = true, Message = "Fetching doctors successfull", Data = result });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new ResponseModel<List<DocRegModel>> { Status = false, Message = "Fetching doctors failed", Data = result });
-        //        }
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
 
-        [HttpGet("GetMyPatients")]
-        public ActionResult GetMyPatients(int doctorId)
+        [Authorize]
+        [HttpGet("GetAppointments")]
+        public ActionResult GetAppointments()
         {
             try
             {
-                var result = this.doctorBusiness.GetMyPatients(doctorId);
+                //fetching id from token
+                int doctorId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "UserId").Value);
+                var result = this.doctorBusiness.GetMyAppointments(doctorId);
                 if (result != null)
                 {
-                    return Ok(new ResponseModel<List<PatientRegModel>> { Status = true, Message = "Fetching doctors successfull", Data = result });
+                    return Ok(new ResponseModel<List<AppointmentModel>> { Status = true, Message = "Fetching Appointments successfull", Data = result });
                 }
                 else
                 {
-                    return BadRequest(new ResponseModel<List<PatientRegModel>> { Status = false, Message = "Fetching doctors failed", Data = result });
+                    return BadRequest(new ResponseModel<List<AppointmentModel>> { Status = false, Message = "Fetching Appointments failed", Data = result });
                 }
             }
             catch (System.Exception ex)

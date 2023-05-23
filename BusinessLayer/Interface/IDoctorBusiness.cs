@@ -10,7 +10,7 @@ namespace BusinessLayer.Interface
         public DocRegModel Register(DocRegModel model);
         public string LoginDoc(LoginModel model);
         public List<DocRegModel> GetAllDoctors();
-        public List<PatientRegModel> GetMyPatients(int doctorId);
+        public List<AppointmentModel> GetMyAppointments(int doctorId);
         public string ForgotPassword(string docEmail);
         public string ResetPassword(ResetPasswordModel model, string docEmail);
       

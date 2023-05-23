@@ -104,5 +104,38 @@ namespace RepositoryLayer.Service
                 this.connection.Close();
             }
         }
+
+        public string UpdateAppoinment(int appointmentId, DateTime date, DateTime time, DateTime endTime)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    SqlCommand command = new SqlCommand("spUpdateAppointment", this.connection);
+                    connection.Open();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@AppointmentId", appointmentId);
+                    command.Parameters.AddWithValue("@Date", date);
+                    command.Parameters.AddWithValue("@VisitTime", time);
+                    command.Parameters.AddWithValue("@EndTime", endTime);
+                    
+                    int count = command.ExecuteNonQuery();
+                    if (count == 1)
+                    {
+                        return "Appointment Updated succesfully";
+                    }
+                    else
+                    {
+                        return "Update Failed";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally { this.connection.Close(); }
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace RepositoryLayer.Service
                 throw ex;
             }
         }
-        public string AdminLogin(string email,string password)
+        public string AdminLogin(LoginModel model)
         {
             try
             {
@@ -81,15 +81,15 @@ namespace RepositoryLayer.Service
                     SqlCommand command = new SqlCommand("spAdminLogin", this.connection);
                     this.connection.Open();
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@Password",EncryptPassword(password));
+                    command.Parameters.AddWithValue("@Email", model.Email);
+                    command.Parameters.AddWithValue("@Password",EncryptPassword(model.Password));
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
                             var Id = reader.GetInt32(0);
-                            var token = GenerateToken(email, Id);
+                            var token = GenerateToken(model.Email, Id);
                             return token;
                         }
                     }
@@ -146,6 +146,7 @@ namespace RepositoryLayer.Service
                             
                             model.Date = reader.GetDateTime( 4);
                             model.DoctorId = reader.GetInt32(7);
+                            model.isTrash=reader.GetBoolean(11);
                             list.Add(model);
                         }
                         return list;
@@ -296,7 +297,7 @@ namespace RepositoryLayer.Service
             try { 
                 using (this.connection) 
                 {
-                    string query = @"delete from AppointmentsTable where AppointmentId=@Id;";
+                    string query = @"Update AppointmentsTable Set Trash='true' where AppointmentId=@Id;";
                     SqlCommand sqlCommand = new SqlCommand(query, this.connection);
                     sqlCommand.Parameters.AddWithValue("@Id", appointmentId);
                     connection.Open();

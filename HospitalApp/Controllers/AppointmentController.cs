@@ -34,7 +34,7 @@ namespace HospitalApp.Controllers
                 return BadRequest(new ResponseModel<string> { Status = false, Message = "Appointment creation failed", Data = result });
             }
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetAllAppointments")]
         public ActionResult GetAllAppointments()
         {
@@ -53,6 +53,22 @@ namespace HospitalApp.Controllers
             catch (System.Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [Authorize]
+        [HttpPut("UpdateAppointment")]
+        public ActionResult UpdateAppointment(int appointmentId ,DateTime date, DateTime time, DateTime endTime)
+        {
+            //int appId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "UserId").Value);
+            var result = appointmentBusiness.UpdateAppoinment(appointmentId, date, time, endTime);
+            if (result != null)
+            {
+                return Ok(new ResponseModel<string> { Status = true, Message = "Appointment Updated successfull", Data = result });
+            }
+            else
+            {
+                return BadRequest(new ResponseModel<string> { Status = false, Message = "Appointment Update failed", Data = result });
             }
         }
     }

@@ -15,11 +15,11 @@ namespace BusinessLayer.Service
         {
             this.adminRepository = adminRepository;
         }
-        public string AdminLogin(string email, string password)
+        public string AdminLogin(LoginModel model)
         {
             try
             {
-                return adminRepository.AdminLogin(email, password);
+                return adminRepository.AdminLogin(model);
             }
             catch (Exception ex)
             {
