@@ -143,10 +143,16 @@ namespace RepositoryLayer.Service
                             AppointmentModel model = new AppointmentModel();
                             model.AppointmentId = reader.GetInt32(0);
                             model.PatientId = reader.GetInt32(1);
-                            
-                            model.Date = reader.GetDateTime( 4);
+                            model.PatientName = reader.GetString(2);
+                            model.PatientEmail = reader.GetString(3);
+                            model.Date = reader.GetDateTime(4);
+                            model.Time = reader.GetTimeSpan(5);
+                            model.Number = reader.GetInt32(6);
                             model.DoctorId = reader.GetInt32(7);
-                            model.isTrash=reader.GetBoolean(11);
+                            model.DoctorName = reader.GetString(8);
+                            model.Desies = reader.GetString(9);
+                            model.EndTime = reader.GetTimeSpan(10);
+                            model.isTrash = reader.GetBoolean(11);
                             list.Add(model);
                         }
                         return list;

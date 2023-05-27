@@ -87,6 +87,7 @@ namespace RepositoryLayer.Service
                             model.DoctorName = reader.GetString(8);
                             model.Desies=reader.GetString(9);
                             model.EndTime = reader.GetTimeSpan(10);
+                            model.isTrash=reader.GetBoolean(11);
                             list.Add(model);
                         }
                         return list;
