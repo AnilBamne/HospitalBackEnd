@@ -21,7 +21,7 @@ namespace RepositoryLayer.Service
             connection = new SqlConnection(connectionString);
         }
 
-        public string CreateAppointment(int patientId,int doctorId,int number,DateTime date,DateTime time,DateTime endTime)
+        public int CreateAppointment(int patientId,int doctorId,int number,DateTime date,DateTime time,DateTime endTime)
         {
             using (connection)
             {
@@ -39,15 +39,39 @@ namespace RepositoryLayer.Service
 
 
                     connection.Open();
-                    int count = command.ExecuteNonQuery();
-                    if (count != 0)
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
                     {
-                        return "Appointment created succesfully";
+                        while (reader.Read())
+                        {
+                            var val = reader.GetInt32(0);
+                            if (val == 1)
+                            {
+                                //return "Appointment created succesfully";
+                                return 1;
+                            }
+                            else if (val == 2)
+                            {
+                                //return "Invalid Input";
+                                return 2;
+                            }
+                            else if (val == 0)
+                            {
+                                //return "Appointment Already Exists";
+                                return 0;
+                            }
+                            else
+                            {
+                                return -1;
+                            }
+                        }
+                        return -1;
                     }
                     else
                     {
-                        return "Failed";
+                        return -1;
                     }
+
                 }
                 catch (Exception ex)
                 {

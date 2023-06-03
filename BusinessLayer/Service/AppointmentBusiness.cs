@@ -16,7 +16,7 @@ namespace BusinessLayer.Service
             this.appointmentRepository = appointmentRepository;
         }
 
-        public string CreateAppointment(int patientId, int doctorId, int number, DateTime date, DateTime time, DateTime endTime)
+        public int CreateAppointment(int patientId, int doctorId, int number, DateTime date, DateTime time, DateTime endTime)
 
         {
             try

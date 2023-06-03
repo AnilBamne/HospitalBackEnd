@@ -25,13 +25,21 @@ namespace HospitalApp.Controllers
         {
             int patId=Convert.ToInt32(User.Claims.FirstOrDefault(a=>a.Type=="UserId").Value);
             var result = appointmentBusiness.CreateAppointment(patId,doctorId,number,date,time,endTime);
-            if (result != null)
+            if (result == 1)
             {
-                return Ok(new ResponseModel<string> { Status = true, Message = "Appointment Created successfull", Data = result });
+                return Ok(new ResponseModel<int> { Status = true, Message = "Appointment Created successfull", Data = result });
+            }
+            else if(result == 2)
+            {
+                return BadRequest(new ResponseModel<int> { Status = false, Message = "Appointment failed, Invalid Input", Data = result });
+            }
+            else if (result == 0)
+            {
+                return BadRequest(new ResponseModel<int> { Status = false, Message = "Appointment Already Exists", Data = result });
             }
             else
             {
-                return BadRequest(new ResponseModel<string> { Status = false, Message = "Appointment creation failed", Data = result });
+                return BadRequest(new ResponseModel<int> { Status = false, Message = "Appointment failed", Data = result });
             }
         }
         [Authorize]
