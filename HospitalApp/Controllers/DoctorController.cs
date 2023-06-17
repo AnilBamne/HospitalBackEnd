@@ -126,6 +126,23 @@ namespace HospitalApp.Controllers
                 throw ex;
             }
         }
-        
+
+        [Authorize]
+        [HttpGet("GetMyPatients")]
+        public ActionResult GetMyPatients()
+        {
+            int doctorId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "UserId").Value);
+            var result = this.doctorBusiness.GetMyPatients(doctorId);
+            if (result != null)
+            {
+                return Ok(new ResponseModel<List<PatientRegModel>> { Status = true, Message = "Fetching Patients successfull", Data = result });
+            }
+            else
+            {
+                return BadRequest(new ResponseModel<List<PatientRegModel>> { Status = false, Message = "Fetching Patients failed", Data = result });
+            }
+        }
+
+
     }
 }

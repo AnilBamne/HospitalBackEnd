@@ -26,6 +26,9 @@ PatientDesies varchar(250),
 --DoctorId int Foreign key References DoctorTable(DoctorId)
 );
 
+Alter Table PatientTable
+Add Trash bit Default 0 Not Null
+
 
 -- 3 Appointment --
 
@@ -42,8 +45,8 @@ DoctorName varchar(100),
 desies varchar(100)
 );
 
-Alter Table AppointmentsTable
-Add Trash time
+--Alter Table AppointmentsTable
+--Add Trash time
 Alter Table AppointmentsTable
 Add Trash bit Default 0 Not Null
 

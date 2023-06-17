@@ -13,6 +13,8 @@ namespace RepositoryLayer.Interface
         public List<AppointmentModel> GetMyAppointments(int doctorId);
         public string ForgotPassword(string docEmail);
         public string ResetPassword(ResetPasswordModel model, string docEmail);
- 
+        public List<PatientRegModel> GetMyPatients(int docId);
+
+
     }
 }

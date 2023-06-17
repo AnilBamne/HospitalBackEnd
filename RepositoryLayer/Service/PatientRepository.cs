@@ -242,7 +242,7 @@ namespace RepositoryLayer.Service
                     {
                         int id = reader.GetInt32(0);
                         string name = reader.GetString(1);
-                        string email = reader.GetString(5);
+                        string email = reader.GetString(3);
                         var token = GenerateToken(email, id);
                         //new MSMQ().SendMessage(token, email,name);
                         return token;

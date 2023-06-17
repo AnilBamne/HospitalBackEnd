@@ -13,6 +13,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 
 namespace RepositoryLayer.Service
 {
@@ -89,7 +90,11 @@ namespace RepositoryLayer.Service
                 throw ex;
             }
         }
-
+        /// <summary>
+        /// Login method for doctor
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public string LoginDoc(LoginModel model)
         {
             try
@@ -126,6 +131,12 @@ namespace RepositoryLayer.Service
         }
 
         //GenerateToken 
+        /// <summary>
+        /// JWT token for authorization
+        /// </summary>
+        /// <param name="docEmailId"></param>
+        /// <param name="doctorId"></param>
+        /// <returns></returns>
         private string GenerateToken(string docEmailId, long doctorId)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
@@ -186,7 +197,11 @@ namespace RepositoryLayer.Service
                 this.connection.Close();
             }
         }
-
+        /// <summary>
+        /// Fetching appointments for doctor who is logged in
+        /// </summary>
+        /// <param name="doctorId"></param>
+        /// <returns></returns>
         public List<AppointmentModel> GetMyAppointments(int doctorId)
         {
             try
@@ -231,7 +246,11 @@ namespace RepositoryLayer.Service
                 this.connection.Close();
             }
         }
-
+        /// <summary>
+        /// method to forgot password
+        /// </summary>
+        /// <param name="docEmail"></param>
+        /// <returns></returns>
         public string ForgotPassword(string docEmail)
         {
             using (this.connection)
@@ -259,24 +278,77 @@ namespace RepositoryLayer.Service
 
         public string ResetPassword(ResetPasswordModel model,string docEmail)
         {
-            if (model.Password.Equals(model.ConfirmPassword))
+            try
+            {
+                if (model.Password.Equals(model.ConfirmPassword))
+                {
+                    using (this.connection)
+                    {
+                        SqlCommand cmd = new SqlCommand("spDocResetPassword", this.connection);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Email", docEmail);
+                        cmd.Parameters.AddWithValue("@ConfirmPassword", EncryptPassword(model.ConfirmPassword));
+                        this.connection.Open();
+                        var count = cmd.ExecuteNonQuery();
+                        if (count != 0)
+                        {
+                            return "Password Reset Done";
+                        }
+                        return "Email not found";
+                    }
+                }
+                return "Password and ConfirmPassword Not Matching";
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public List<PatientRegModel> GetMyPatients(int docId)
+        {
+            try
             {
                 using (this.connection)
                 {
-                    SqlCommand cmd = new SqlCommand("spDocResetPassword", this.connection);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Email", docEmail);
-                    cmd.Parameters.AddWithValue("@ConfirmPassword", EncryptPassword(model.ConfirmPassword));
-                    this.connection.Open();
-                    var count = cmd.ExecuteNonQuery();
-                    if (count!=0)
+                    SqlCommand sqlCommand=new SqlCommand("spGetMyPatients", connection);
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    sqlCommand.Parameters.AddWithValue("@docId", docId);
+                    connection.Open();
+                    SqlDataReader reader=sqlCommand.ExecuteReader();
+                    if (reader.HasRows)
                     {
-                        return "Password Reset Done";
+                        List<PatientRegModel> list = new List<PatientRegModel>();
+                        while (reader.Read())
+                        {
+                            PatientRegModel model = new PatientRegModel();
+                            model.PatientFirstName = reader.GetString(0);
+                            model.PatientLastName = reader.GetString(1);
+                            model.PatientEmail = reader.GetString(2);
+                            model.PatientPassword = reader.GetString(3);
+                            model.PatientGender = reader.GetString(4);
+                            model.PatientAddress = reader.GetString(5);
+                            model.PatientCity = reader.GetString(6);
+                            model.PatientState = reader.GetString(7);
+                            model.PatientDesies = reader.GetString(8);
+
+                            list.Add(model);
+                        }
+                        return list;
                     }
-                    return "Email not found";
                 }
+
+                return null;
             }
-            return "Password and ConfirmPassword Not Matching";
+            catch(Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }

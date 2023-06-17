@@ -83,5 +83,10 @@ namespace BusinessLayer.Service
         {
             return doctorRepository.ResetPassword(model, docEmail);
         }
+
+        public List<PatientRegModel> GetMyPatients(int docId)
+        {
+            return doctorRepository.GetMyPatients(docId);
+        }
     }
 }

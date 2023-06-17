@@ -1,22 +1,29 @@
-Create Procedure spGetMyPatients
-@DoctorId int
+Alter Procedure spGetMyPatients
+@docId int
 As
 Begin
 	Begin Try
 		Begin Transaction
-			Select * from PatientTable Where DoctorId=@DoctorId;
-			Commit Transaction
-	END TRY
-	BEGIN CATCH
-		-- Transaction uncommittable
-		IF (XACT_STATE()) = -1
-		ROLLBACK TRANSACTION
- 
-		-- Transaction committable
-		IF (XACT_STATE()) = 1
-		COMMIT TRANSACTION
-	END CATCH
-END;
+			select 
+				p.patientFirstName,
+				p.patientLastName,
+				p.PatientEmail,
+				p.PatientPassword,
+				p.PatientGender,
+				p.PatientAddress,
+				p.PatientCity,
+				p.PatientState,
+				p.PatientDesies
+			from PatientTable p
+			Inner Join AppointmentsTable a
+			On p.PatientId=a.PatientId
+			where DoctorId=@docId
+		Commit Transaction
+	End Try
+	Begin Catch
+		rollback transaction
+	End Catch
+End
 
---Exec spGetMyPatients 1;
 
+exec spGetMyPatients 1
